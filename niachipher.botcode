@@ -1,0 +1,64 @@
+import asyncio
+import logging
+import sys
+from os import getenv, name
+
+from aiogram import Bot, Dispatcher, Router, types
+from aiogram.enums import ParseMode
+from aiogram.filters import CommandStart
+from aiogram.types import Message
+from aiogram.types.reply_keyboard_markup import ReplyKeyboardMarkup
+from aiogram.types.keyboard_button import KeyboardButton
+
+
+# Bot token can be obtained via https://t.me/BotFather
+TOKEN = "6716331205:AAGH-v505kjUw98DsBEpiHsKwa8CgQnVTYo"
+
+# All handlers should be attached to the Router (or Dispatcher)
+dp = Dispatcher()
+# Initialize Bot instance with a default parse mode which will be passed to all API calls
+bot = Bot(TOKEN)
+
+
+# --- REPLY MENU MARKUP ---
+def r_main_menu():
+    kb = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="про нас")],
+            [KeyboardButton(text="привіт")],[KeyboardButton(text="=}")],
+            [KeyboardButton(text="&")],[KeyboardButton(text="коли сіяти помідори на розсаду?")],
+            [KeyboardButton(text="яка качка тебе копнула?")],[KeyboardButton(text="як пересадити кактус?")],
+            [KeyboardButton(text="детальніше про авторів")]
+        ],
+        resize_keyboard=True
+    )
+    return kb
+
+
+@dp.message(CommandStart())
+async def command_start_handler(message: Message) -> None:
+    await message.answer("Hello! I'm live!", reply_markup=r_main_menu())
+
+
+@dp.message()
+async def reply_kb_handler(message: types.Message) -> None:
+    msg = message.text
+    cid = message.from_user.id
+    if msg == "про нас":
+        # await bot.send_message(cid, "Some Text")
+        text = (" бот створено з допомогою учасників компанії {Офіс штаба} ")
+        await message.answer(text)
+    elif msg == "привіт":
+        await message.answer("вітаю! я Nia Chipher")
+    elif msg == "=}":
+        await message.answer("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum")
+    elif msg == "&":
+        await message.answer("ce texte n'a pas de sens, il existe juste ici")
+    elif msg == "коли сіяти помідори на розсаду?":
+        await message.answer(" починаючи з середини лютого і до середини березня")
+    elif msg == "яка качка тебе копнула?":
+        await message.answer("дика >:>")
+    elif msg == "як пересадити кактус?":
+        await message.answer("зніміть верхній шар грунту, переверніть кактус, оберніть його рушником або складеною газетою і дістаньте з горщика; розпушіть коріння і викиньте зайвий грунт; огляньте коріння, видаліть сухе або хворе; заповніть горщик купленим грунтом, помістіть рослину всередину і присипте землею.удачі;)")
+    elif msg == "детальніше про авторів":
+        await message.answer("автори бота: зам.директора компанії {Офіс штаба},директор компанії {Офіс штаба}.все створено так,як і повинно бути по нашій задумці ")
